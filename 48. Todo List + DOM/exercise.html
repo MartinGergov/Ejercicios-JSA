@@ -1,0 +1,49 @@
+<html>
+  <body>
+    <div id="container" style="display: inline; align-items: center"></div>
+  </body>
+</html>
+<script>
+  let link = "https://jsonplaceholder.typicode.com/todos";
+  const contenedor = document.querySelector("#container");
+  const doneTitle = document.createElement("h2");
+  doneTitle.textContent = "Done:";
+  doneTitle.style.color = "green";
+  const finishedList = document.createElement("ul");
+  const todoTitle = document.createElement("h2");
+  todoTitle.textContent = "To do:";
+  todoTitle.style.color = "red";
+  const todoList = document.createElement("ul");
+  contenedor.appendChild(doneTitle);
+  contenedor.appendChild(finishedList);
+  contenedor.appendChild(todoTitle);
+  contenedor.appendChild(todoList);
+
+  async function getToDo(url) {
+    try {
+      let response = await fetch(url);
+      let data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  getToDo(link)
+    .then((todos) => {
+      todos.forEach((item) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `Title: ${item.title}`;
+
+        if (item.completed) {
+          listItem.style.color = "green";
+          finishedList.appendChild(listItem);
+        } else {
+          listItem.style.color = "red";
+          todoList.appendChild(listItem);
+        }
+      });
+    })
+    .catch((error) => console.error(error));
+</script>

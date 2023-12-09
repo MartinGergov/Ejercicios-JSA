@@ -1,0 +1,50 @@
+<html>
+  <body>
+    <div id="container" style="display: inline; align-items: center"></div>
+  </body>
+</html>
+<script>
+  let link = "https://jsonplaceholder.typicode.com/todos";
+  const contenedor = document.querySelector("#container");
+  const doneTitle = document.createElement("h2");
+  doneTitle.textContent = "Done:";
+  doneTitle.style.color = "green";
+  const finishedList = document.createElement("ul");
+  const todoTitle = document.createElement("h2");
+  todoTitle.textContent = "To do:";
+  todoTitle.style.color = "red";
+  const todoList = document.createElement("ul");
+  contenedor.appendChild(doneTitle);
+  contenedor.appendChild(finishedList);
+  contenedor.appendChild(todoTitle);
+  contenedor.appendChild(todoList);
+
+  async function getToDo(url) {
+    let getJSON;
+    try {
+      let firstCall = await fetch(url);
+      getJSON = await firstCall.json();
+    } catch (err) {
+      console.error(err);
+    }
+    return getJSON;
+  }
+
+  getToDo(link)
+    .then((val) =>
+      val.forEach((item) => {
+        if (item.completed === true) {
+          const comp = document.createElement("li");
+          comp.textContent = `Title: ${item.title}`;
+          finishedList.appendChild(comp);
+        } else if (item.completed === false) {
+          const uncomp = document.createElement("li");
+          uncomp.textContent = `Title: ${item.title}`;
+          todoList.appendChild(uncomp);
+        } else {
+          console.log(`There's an error with this item: ${item.id}`);
+        }
+      })
+    )
+    .catch((err) => console.error(err));
+</script>
